@@ -18,7 +18,7 @@ const Notificate = Object.freeze({
 
  /* USER_LIST */
  const User = Object.freeze({   
-    USER_INFO: api + '/user/getUserInfo',
+    USER_INFO: api + '/user/login',
     USER_JOIN: api + '/user/join'
 });
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StatusBar, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Style from './Style';
 import Axios from "axios";
@@ -39,9 +39,19 @@ function LoginScreen({navigation}: {navigation: any}) {
                 password: password
             })     
             .then((response) => {
-                AsyncStorage.setItem('user', JSON.stringify(response.data));
-                AsyncStorage.setItem('isLogin', JSON.stringify(true));
-                moveToPostScreen();
+                if(response.data.loginSuccess){
+                    AsyncStorage.setItem('user', JSON.stringify(response.data));
+                    AsyncStorage.setItem('isLogin', JSON.stringify(true));
+                    moveToPostScreen();
+                }
+                else{
+                    Alert.alert("", response.data.message, [
+                        {
+                          text: "확인",
+                          onPress: () => null,
+                        }
+                      ]);
+                }
             })
             .catch(e => {  // API 호출이 실패한 경우
                 console.error(e);  // 에러표시
