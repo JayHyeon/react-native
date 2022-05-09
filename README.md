@@ -14,3 +14,6 @@
 # 3. cd ios && pod deintegrate && pod install --repo-update && cd ..
 # 4. watchman watch-del-all
 # 5. npm start -- --reset-cache
+
+# 참고
+# https://oblador.github.io/react-native-vector-icons/
