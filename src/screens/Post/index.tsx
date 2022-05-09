@@ -6,10 +6,13 @@ import { Post as Style } from './Style';
 import { Common as StyleCommon } from '@common/Style'
 import { PostItem } from './DataType';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector, useDispatch } from "react-redux";
 import { header, HEADER_TYPE, search, write_action, WRITE_ACTION_TYPE } from '@actions/PostAction';
 import Progress from '@common/ProgressBar';
 import { renderItem } from './RenderPostItem';
+import AsyncStorage from '@react-native-community/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 
 const HEADER_HEIGHT = Style.Header.height;
 const LIMIT = 10;
@@ -42,6 +45,15 @@ const PostScreen = ({navigation}: {navigation: any}) => {
     outputRange: [0, -HEADER_HEIGHT],
     extrapolate: 'clamp'
   });
+  const isFocused = useIsFocused();
+  const [isLogin, setLogin] = useState(false);
+
+  useEffect(() => {
+    AsyncStorage.getItem('isLogin', async (err, result) => {
+      if(result != null)
+        setLogin(JSON.parse(result));
+    });
+  }, [isFocused])
 
   useEffect(() => {    
     return () => {
@@ -71,14 +83,11 @@ const PostScreen = ({navigation}: {navigation: any}) => {
     setProgressBarDisplay(value);
   }
 
-  const moveToPostWriteScreen = () => {    
-    navigation.push('PostWrite');
-  };
-
   const refresh = () => {
     setPostItems([]);
     setOffset(0);
   }
+
 
   const moveToMypageScreen = () => {
     navigation.push('Mypage');
@@ -92,8 +101,16 @@ const PostScreen = ({navigation}: {navigation: any}) => {
     navigation.push('PetShop');
   }
 
+  const moveToPostWriteScreen = () => {    
+    navigation.push('PostWrite');
+  };
+
   const moveToSearchScreen = () => {
     navigation.push('PostSearch');
+  }
+
+  const moveToLoginScreen = () => {
+    navigation.navigate('Login');
   }
 
   const cancelSearchMode = () => {
@@ -148,12 +165,23 @@ const PostScreen = ({navigation}: {navigation: any}) => {
           }}>
           { headerValue == HEADER_TYPE.INIT ? 
             <View style={Style.HeaderContainer}>
-              <Icon 
-                name="search" 
-                size={24} 
-                color="#ffffff" 
-                style={Style.HeaderSearchIcon}
-                onPress={moveToSearchScreen}/>
+              <View style={Style.HeaderIconContainer}>
+                <Icon 
+                  name="search" 
+                  size={24} 
+                  color="#ffffff" 
+                  style={Style.HeaderSearchIcon}
+                  onPress={moveToSearchScreen}/>
+                {
+                  !isLogin &&
+                  <Icon2
+                  name="login" 
+                  size={24} 
+                  color="#ffffff" 
+                  style={Style.HeaderLoginIcon}
+                  onPress={moveToLoginScreen}/>
+                }      
+              </View>              
               <Text style={Style.HeaderText}>HEADER</Text>
             </View>    
           : 

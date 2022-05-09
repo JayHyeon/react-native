@@ -7,6 +7,8 @@ import PostSearchScreen from '@screens/Post/Search';
 import NotificateScreen from '@screens/Notificate';
 import MypageScreen from '@screens/Mypage';
 import PetShopScreen from '@screens/PetShop';
+import LoginScreen from '@screens/Login';
+import JoinScreen from '@screens/Join';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +22,8 @@ const Navigator = () => {
                 <Stack.Screen name="Notificate" component={NotificateScreen} />
                 <Stack.Screen name="Mypage" component={MypageScreen} />
                 <Stack.Screen name="PetShop" component={PetShopScreen} />
+                <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen name="Join" component={JoinScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

@@ -16,7 +16,14 @@ const Notificate = Object.freeze({
     NOTIFICATE_LIST_DELETE: api + '/noti/deleteData/'
 });
 
+ /* USER_LIST */
+ const User = Object.freeze({   
+    USER_INFO: api + '/user/getUserInfo',
+    USER_JOIN: api + '/user/join'
+});
+
 export {
     Post,
-    Notificate
+    Notificate,
+    User
 };

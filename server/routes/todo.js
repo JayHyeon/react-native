@@ -12,22 +12,22 @@ router.get('/getData', (req, res) => {
 
 router.get('/getData/:id', (req, res) => {
   Todo.findOneByTodoid(req.params.id)
-    .then((todo) => {
-      if (!todo) return res.status(404).send({ err: 'Todo not found' });
-      res.send(`findOne successfully: ${todo}`);
+    .then((todos) => {
+      if (!todos) return res.status(404).send({ err: 'Todo not found' });
+      res.send(`findOne successfully: ${todos}`);
     })
     .catch(err => res.status(500).send(err));
 });
 
 router.post('/insertData', (req, res) => {
   Todo.create(req.body)
-    .then(todo => res.send(todo))
+    .then(todos => res.send(todos))
     .catch(err => res.status(500).send(err));
 });
 
 router.put('/updateData/:id', (req, res) => {
   Todo.updateByTodoid(req.params.id, req.body.params)
-    .then(todo => res.send(todo))
+    .then(todos => res.send(todos))
     .catch(err => res.status(500).send(err));
 });
 

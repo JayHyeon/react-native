@@ -22,9 +22,15 @@ const Post = StyleSheet.create({
         width: '100%',
         height: '100%'
     },
-    HeaderSearchIcon: {
+    HeaderIconContainer: {
         position: 'absolute',
-        right: 20
+        right: 20,
+        flexDirection: 'row'
+    },
+    HeaderSearchIcon: {
+    },
+    HeaderLoginIcon: {
+        marginLeft: 12
     },
     HeaderText: {
         fontWeight: 'bold',

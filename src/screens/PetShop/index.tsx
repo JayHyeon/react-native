@@ -3,7 +3,7 @@ import { View ,Button } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Text } from 'react-native-paper';
 
-function PetShopScreen() {
+function PetShopScreen({navigation}: {navigation: any}) {
     return (
       <View>
         <ScrollView horizontal={true}>
