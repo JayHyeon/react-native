@@ -3,6 +3,7 @@ interface PostItem {
     content: string;
     createdAt: string;
     idx: Number;
+    _id: string;
 }
 
 interface PostSearchItem {

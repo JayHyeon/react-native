@@ -3,9 +3,10 @@ const api = 'http://localhost:4000/api';
  /* POST_LIST */
 const Post = Object.freeze({   
     POST_LIST_GET: api + '/post/getData',
+    POST_DETAIL_INFO: api + '/post/detail/',
     POST_LIST_CREATE: api + '/post/insertData',
     POST_LIST_UPDATE: api + '/post/updateData/',
-    POST_LIST_DELETE: api + '/post/deleteData/'
+    POST_LIST_DELETE: api + '/post/deleteData/'    
 });
 
  /* NOTIFICATE_LIST */

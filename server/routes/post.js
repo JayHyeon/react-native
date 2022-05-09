@@ -19,6 +19,15 @@ router.get('/getData/:word', (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
+router.get('/detail/:id', (req, res) => {
+  Post.findByPostId(req.params.id)
+    .then((posts) => {
+      if (!posts) return res.status(404).send({ err: 'Post not found' });
+      res.send(posts);
+    })
+    .catch(err => res.status(500).send(err));
+});
+
 router.post('/insertData', (req, res) => {
   Post.create(req.body)
     .then(posts => res.send(posts))

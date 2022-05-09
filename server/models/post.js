@@ -41,6 +41,10 @@ postScheme.statics.findByPostWord = function (word, offset, limit) {
   return this.find({ $or : [{ content: { $regex: '.*' + word + '.*'} }, { title: { $regex: '.*' + word + '.*'}}]}).sort({ "idx" : -1 }).skip(offset).limit(limit);
 };
 
+postScheme.statics.findByPostId = function (id) {
+  return this.findOne({ _id: id });
+};
+
 postScheme.statics.updateByPostid = function (id, payload) {
   return this.updateOne({ _id: id }, payload);
 };

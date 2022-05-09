@@ -50,7 +50,7 @@ const Post = StyleSheet.create({
         lineHeight: 30
     },
     ItemContainer: {
-        aspectRatio: 135 / 76,
+        paddingVertical: 30,
         borderWidth: 1,
         borderRadius: 3,
         marginTop: 5

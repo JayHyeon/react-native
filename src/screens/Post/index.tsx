@@ -10,7 +10,6 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector, useDispatch } from "react-redux";
 import { header, HEADER_TYPE, search, write_action, WRITE_ACTION_TYPE } from '@actions/PostAction';
 import Progress from '@common/ProgressBar';
-import { renderItem } from './RenderPostItem';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -88,7 +87,6 @@ const PostScreen = ({navigation}: {navigation: any}) => {
     setOffset(0);
   }
 
-
   const moveToMypageScreen = () => {
     navigation.push('Mypage');
   }
@@ -142,6 +140,31 @@ const PostScreen = ({navigation}: {navigation: any}) => {
         Loading(false)
       });
   }
+
+  const moveToDetailScreen = (postId: string) => {
+    navigation.navigate('PostDetail', {postId: postId});
+  }
+
+  const renderItem = ({item}: {item: PostItem}) => {
+    return (
+      <TouchableOpacity onPress={() => moveToDetailScreen(item._id)}>
+        <View style={Style.ItemContainer}>
+            <View>
+                <Text>user id : {item.createdAt}</Text>
+            </View>
+            <View>
+                <Text>id : {item.idx.toString()}</Text>
+            </View>
+            <View>
+                <Text>title : {item.title}</Text>
+            </View>
+            <View>
+                <Text>content : {item.content}</Text>
+            </View>
+        </View>
+      </TouchableOpacity>
+    );
+};
 
   return (
     <View style={Style.Container}>
@@ -205,6 +228,7 @@ const PostScreen = ({navigation}: {navigation: any}) => {
           keyExtractor={(item) => String(item.idx)}
           onEndReachedThreshold={0.8}
           onEndReached={getPostList}
+          
           contentInset={{ top: HEADER_HEIGHT }}
           bounces={true}
           scrollEventThrottle={8}

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList} from 'react-native';
+import { View, Text, FlatList} from 'react-native';
 import { Notificate } from '@common/Url';
 import { Notificate as Style } from './Style';
 import { Common as StyleCommon } from '@common/Style'
 import { NotificateItem } from './DataType';
 import Progress from '@common/ProgressBar';
 import Axios from "axios";
-import { renderItem } from './RenderNotificateItem';
 
 const LIMIT = 10;
 
@@ -54,6 +53,25 @@ function NotificateScreen() {
         Loading(false)
       });
   }
+
+  const renderItem = ({item}: {item: NotificateItem}) => {
+    return (
+      <View style={Style.ItemContainer}>
+            <View>
+                <Text>user id : {item.createdAt}</Text>
+            </View>
+            <View>
+                <Text>id : {item.idx.toString()}</Text>
+            </View>
+            <View>
+                <Text>title : {item.title}</Text>
+            </View>
+            <View>
+                <Text>content : {item.content}</Text>
+            </View>
+      </View>
+    );
+};
 
   return (
     <View>
