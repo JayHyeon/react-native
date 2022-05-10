@@ -21,11 +21,18 @@ router.post('/login', (req, res) => {
             message: "비밀번호가 일치하지 않습니다",
           });
         }
-        return res.json({
-          loginSuccess: true,
-          id: users.id,
-          name: users.name
-        });
+        
+        User
+        .updateLoginToken(users.id)
+        .then((result) => {
+          return res.json({
+            loginSuccess: true,
+            id: users.id,
+            name: users.name,
+            token: result.loginToken
+          });                
+        })
+        .catch((err) => res.json({ loginSuccess: false, err }));
       })
       .catch((err) => res.json({ loginSuccess: false, err }));
     })

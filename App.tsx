@@ -5,6 +5,7 @@ import store from '@store';
 import Navigation from './src/navigator';
 
 function App() {
+  
   return (
     <Provider store={store}>
       <SafeAreaView style={{flex: 1}}>

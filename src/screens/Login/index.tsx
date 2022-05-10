@@ -41,7 +41,6 @@ function LoginScreen({navigation}: {navigation: any}) {
             .then((response) => {
                 if(response.data.loginSuccess){
                     AsyncStorage.setItem('user', JSON.stringify(response.data));
-                    AsyncStorage.setItem('isLogin', JSON.stringify(true));
                     moveToPostScreen();
                 }
                 else{

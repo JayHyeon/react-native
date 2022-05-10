@@ -48,9 +48,11 @@ const PostScreen = ({navigation}: {navigation: any}) => {
   const [isLogin, setLogin] = useState(false);
 
   useEffect(() => {
-    AsyncStorage.getItem('isLogin', async (err, result) => {
+    AsyncStorage.getItem('user', async (err, result) => {  
       if(result != null)
-        setLogin(JSON.parse(result));
+        setLogin(true);
+      else
+        setLogin(false);
     });
   }, [isFocused])
 

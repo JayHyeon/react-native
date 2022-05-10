@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const saltRounds2 = 12;
 const autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(mongoose.connection);
 
@@ -23,7 +24,7 @@ const userScheme = new mongoose.Schema({
     type: String,
     required: true
   },
-  autoLoginToken: {
+  loginToken: {
     type: String,
     default: ''
   }
@@ -41,7 +42,6 @@ userScheme.plugin(autoIncrement.plugin, {
 
 userScheme.pre("save", function(next) {
   let user = this;
-
   //model 안의 paswsword가 변환될때만 암호화
   if (user.isModified("password")) {
     bcrypt.genSalt(saltRounds, function (err, salt) {
@@ -57,10 +57,23 @@ userScheme.pre("save", function(next) {
   }
 });
 
-userScheme.statics.create = function (payload) {
-  const users = new this(payload);
-  return users.save();
-};
+userScheme.pre("findOneAndUpdate", function(next) {
+  let update = {...this.getUpdate()};
+  let _this = this;
+  if (update.loginToken) {   
+    bcrypt.genSalt(saltRounds2, function (err, salt) {
+      if (err) return next(err);
+      bcrypt.hash(update.loginToken, salt, function (err, hash) {
+        if (err) return next(err);  
+        update.loginToken = hash;
+        _this.setUpdate(update);
+        next();
+      });
+    });
+  } else {
+    next();
+  }
+});
 
 userScheme.methods.comparePassword = function (plainPassword) {
   return bcrypt
@@ -69,8 +82,19 @@ userScheme.methods.comparePassword = function (plainPassword) {
     .catch((err) => err);
 };
 
+userScheme.statics.create = function (payload) {
+  const users = new this(payload);
+  return users.save();
+};
+
 userScheme.statics.findOneByLogin = function (id) {
   return this.findOne({ id: id });
 };
+
+userScheme.statics.updateLoginToken = function (id) {
+  let value = id + Date.now();
+  return this.findOneAndUpdate({ id: id }, { loginToken: value }, {new: true});
+};
+
 
 module.exports = mongoose.model("User", userScheme);
