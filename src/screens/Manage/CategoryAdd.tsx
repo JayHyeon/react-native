@@ -31,7 +31,7 @@ function CategoryAddScreen({navigation}: {navigation: any}) {
         if(index == 0)
             registNewCategory()
         else
-            categoryList.map(ary => ary.root.map((item: any, idx: Number) => {if(idx == +index-1) getChildCategoryList(item.idx)}))
+            categoryList.map((ary: any) => ary.root.map((item: any, idx: Number) => {if(idx == +index-1) getChildCategoryList(item.idx)}))
     }
 
     const registNewCategory = () => {
@@ -51,7 +51,6 @@ function CategoryAddScreen({navigation}: {navigation: any}) {
         await Axios
             .get(Category.CATEGORY_LIST + value)     
             .then((response) => {    
-                console.log(response.data)
                 if(parent == ''){
                     let rootAry: any = {
                         root: response.data
