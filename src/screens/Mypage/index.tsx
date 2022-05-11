@@ -5,12 +5,14 @@ import Style from './Style';
 
 function MypageScreen({navigation}: {navigation: any}) {
   const [isLogin, setLogin] = useState(false);
+  const [level, setLevel] = useState(1);
 
   useEffect(() => {
     AsyncStorage.getItem('user', async (err, result) => {  
-      if(result != null)
+      if(result != null){
         setLogin(true);
-      else
+        setLevel(JSON.parse(result).level)
+      }else
         setLogin(false);
     });
   }, [])
@@ -26,17 +28,38 @@ function MypageScreen({navigation}: {navigation: any}) {
     navigation.navigate('Post');
   }
 
+  const moveToLoginScreen = () => {
+    navigation.navigate('Login');
+  }
+
+  const moveToManageScreen = () => {
+    navigation.navigate('Manage');
+  }
+
   return (
     <View>
-      <Button title="MypageScreen d열기" />
       {
-        isLogin &&
-        <TouchableOpacity
+      isLogin ?
+      <TouchableOpacity
           onPress={()=> requestLogout()}
           style={Style.loginBtnContainer}>
           <Text style={Style.loginBtnText}>로그아웃</Text>
       </TouchableOpacity>
+      :
+      <TouchableOpacity
+          onPress={()=> moveToLoginScreen()}
+          style={Style.loginBtnContainer}>
+          <Text style={Style.loginBtnText}>로그인</Text>
+      </TouchableOpacity>
       }      
+      {
+      level == 9 &&
+      <TouchableOpacity
+          onPress={()=> moveToManageScreen()}
+          style={Style.loginBtnContainer}>
+          <Text style={Style.loginBtnText}>관리자</Text>
+      </TouchableOpacity>
+      }
     </View>
   );
 }

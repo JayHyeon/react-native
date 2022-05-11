@@ -18,13 +18,19 @@ const Notificate = Object.freeze({
 });
 
  /* USER_LIST */
- const User = Object.freeze({   
+const User = Object.freeze({   
     USER_INFO: api + '/user/login',
     USER_JOIN: api + '/user/join'
+});
+
+/* CATEGORY_LIST */
+const Category = Object.freeze({   
+    CATEGORY_LIST: api + '/category/list'    
 });
 
 export {
     Post,
     Notificate,
-    User
+    User,
+    Category
 };

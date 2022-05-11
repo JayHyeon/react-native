@@ -29,6 +29,7 @@ router.post('/login', (req, res) => {
             loginSuccess: true,
             id: users.id,
             name: users.name,
+            level: users.level,
             token: result.loginToken
           });                
         })

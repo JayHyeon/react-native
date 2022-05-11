@@ -27,6 +27,10 @@ const userScheme = new mongoose.Schema({
   loginToken: {
     type: String,
     default: ''
+  },
+  level: {
+    type: Number,
+    default: 1
   }
 },
 {
