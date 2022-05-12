@@ -25,7 +25,8 @@ const User = Object.freeze({
 
 /* CATEGORY_LIST */
 const Category = Object.freeze({   
-    CATEGORY_LIST: api + '/category/list'    
+    CATEGORY_LIST: api + '/category/list',
+    CATEGORY_ADD: api + '/category/add'
 });
 
 export {

@@ -1,70 +1,82 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StatusBar, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StatusBar, TextInput, Alert } from 'react-native';
 import { CategoryAdd as Style } from './Style';
 import Axios from "axios";
 import Progress from '@common/ProgressBar';
 import { Category } from '@common/Url';
 import SelectDropdown from 'react-native-select-dropdown'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 function CategoryAddScreen({navigation}: {navigation: any}) {
     const [isLoading, setLoading] = useState(false);
-    const [progressBarDisplay, setProgressBarDisplay] = useState(false);
-    const [parent, setParent] = useState('');
-    const [categoryList, setCategoryList] = useState([]);
-    const [categoryNameList, setCategoryNameList] = useState(['등록']);
+    const [progressBarDisplay, setProgressBarDisplay] = useState(false);    
+    const [categoryName, setCategoryName] = useState("");
+    const [categoryList1, setCategoryList1] = useState<string[]>([]);
+    const [categoryList2, setCategoryList2] = useState<string[]>([]);
+    const [categoryList3, setCategoryList3] = useState<string[]>([]);
+    const [categoryValue1, setCategoryValue1] = useState("");
+    const [categoryValue2, setCategoryValue2] = useState("");
+    const [categoryValue3, setCategoryValue3] = useState("");
+    const [tempCategory, setTempCategory] = useState("");
 
-    useEffect(() => {    
-        getCategoryList();      
-    }, []);
+    useEffect(() => {
+        getCategoryList('');
+    }, [])
+
+    useEffect(() => {
+        if(tempCategory == "") return;
+        
+    }, [tempCategory])
 
     const Loading = (value: boolean) => {
         setLoading(value);
         setProgressBarDisplay(value);
     }
 
+    const inputChange = (text: string) => {
+        setCategoryName(text);
+    }
+
     const checkList = () => {
         // categoryList.map(ary => console.log(ary.root));
-        console.log(categoryNameList)
+        console.log(categoryList1)
     }
 
-    const selectedCategory = (index: Number) => {
-        if(index == 0)
-            registNewCategory()
-        else
-            categoryList.map((ary: any) => ary.root.map((item: any, idx: Number) => {if(idx == +index-1) getChildCategoryList(item.idx)}))
+    const requestCategoryAdd = async () => {  
+        if(isLoading) {
+            return
+        }          
+        Loading(true)
+
+        await Axios
+            .post(Category.CATEGORY_ADD, {
+                // parent: parent,
+                name: categoryName
+            })     
+            .then((response) => {    
+                console.log(response)
+            })
+            .catch(e => {  // API 호출이 실패한 경우
+                console.error(e);  // 에러표시
+            })
+            .finally(() => {
+                Loading(false)
+            });
     }
 
-    const registNewCategory = () => {
-        console.log(" new ");
-    }
-    
-    const getChildCategoryList = (idx: Number) => {
-        console.log(" child : ", idx);
-    }
-
-    const getCategoryList = async () => {
+    const getCategoryList = async (parent: string) => {
         if(isLoading) {
           return
         }  
         Loading(true)
-        const value: string = parent ? "/" + parent : '';    
+        const value: string = parent != "" ? "/" + parent : '';    
         await Axios
-            .get(Category.CATEGORY_LIST + value)     
-            .then((response) => {    
-                if(parent == ''){
-                    let rootAry: any = {
-                        root: response.data
-                    }                    
-                    setCategoryList(categoryList.concat(rootAry))
-                    
-                    response.data.map((item: any) => setCategoryNameList(categoryNameList.concat(item.name)));                    
-                }                    
-                else{
-                    let childAry: any = {
-                        [parent]: response.data
-                    }
-                    setCategoryList(categoryList.concat(childAry));
-                }                    
+            .get(Category.CATEGORY_LIST + value)
+            .then((response) => {      
+                setTempCategory("등록");
+                response.data.map((item: any) => {
+                    setTempCategory(item.name);
+                });
             })
             .catch(e => {  // API 호출이 실패한 경우
                 console.error(e);  // 에러표시
@@ -75,25 +87,78 @@ function CategoryAddScreen({navigation}: {navigation: any}) {
     }
 
     return (
-        <View style={Style.container}>
-            <SelectDropdown
-                data={categoryNameList}
-                onSelect={(selectedItem, index) => {
-                    selectedCategory(index)
-                }}
-                buttonTextAfterSelection={(selectedItem, index) => {
-                    // text represented after item is selected
-                    // if data array is an array of objects then return selectedItem.property to render after item is selected
-                    return selectedItem
-                }}
-                rowTextForSelection={(item, index) => {
-                    // text represented for each item in dropdown
-                    // if data array is an array of objects then return item.property to represent item in dropdown
-                    return item
-                }}
-            />
+        <View style={Style.container}>       
+            <View style={Style.dropdownContainer}>
+                <SelectDropdown
+                    data={categoryList1}
+                    buttonStyle={Style.dropdown}
+                    renderDropdownIcon={isOpened => {
+                        return <Icon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                    }}
+                    dropdownIconPosition={'right'}
+                    defaultButtonText={'선택'}
+                    onSelect={(selectedItem, index) => {
+                        setCategoryList2([]);     
+                        if(selectedItem != '등록'){
+                            getCategoryList(selectedItem);
+                        }
+                    }}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                    }}
+                    rowTextForSelection={(item, index) => {
+                        return item
+                    }}/>
+                <View style={Style.divider} />
+                <SelectDropdown
+                    data={categoryList2}
+                    buttonStyle={Style.dropdown}
+                    renderDropdownIcon={isOpened => {
+                        return <Icon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                    }}
+                    dropdownIconPosition={'right'}
+                    defaultButtonText={'선택'}
+                    onSelect={(selectedItem, index) => {
+                        setCategoryList3([]);     
+                        if(selectedItem != '등록'){
+                            getCategoryList(selectedItem);
+                        }
+                    }}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                    }}
+                    rowTextForSelection={(item, index) => {
+                        return item
+                    }}/>
+                <View style={Style.divider} />
+                <SelectDropdown
+                    data={categoryList3}
+                    buttonStyle={Style.dropdown}
+                    renderDropdownIcon={isOpened => {
+                        return <Icon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                    }}
+                    dropdownIconPosition={'right'}
+                    defaultButtonText={'선택'}
+                    onSelect={(selectedItem, index) => {
+                      
+                    }}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                    }}
+                    rowTextForSelection={(item, index) => {
+                        return item
+                    }}/>
+            </View>            
+            <View style={Style.inputArea}>
+                <TextInput 
+                    style={Style.inputBox} 
+                    onChangeText={(text) => inputChange(text)}
+                    placeholder='Category Name'
+                    placeholderTextColor="#adb5bd" />
+            </View>
             <TouchableOpacity
-                onPress={()=> checkList()}
+                onPress={()=> requestCategoryAdd()}
+                // onPress={()=> checkList()}
                 style={Style.loginBtnContainer}>
                 <Text style={Style.loginBtnText}>check</Text>
             </TouchableOpacity>

@@ -10,7 +10,8 @@ const categoryScheme = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   depth: {
     type: Number,
@@ -32,13 +33,35 @@ categoryScheme.plugin(autoIncrement.plugin, {
   increment: 1
 });
 
+categoryScheme.pre("save", async function(next) {
+  let Category = this.constructor;
+  let categories = this;  
+  //model 안의 paswsword가 변환될때만 암호화
+  if (categories.isModified("parent")) {
+    if(categories.parent != ""){
+      let parent = await Category.findOne({name : categories.parent});
+      categories.depth = parent.depth + 1;
+      categories.parent = parent.idx;
+      next();
+    }else{
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
 categoryScheme.statics.create = function (payload) {
-  const users = new this(payload);
-  return users.save();
+  const categories = new this(payload);
+  return categories.save();
 };
 
 categoryScheme.statics.findAll = function (parent) {
-  return this.find({ parent: parent } ).sort({ "idx" : -1 });
+  return this.find({ parent: parent }, {name: 1} ).sort({ "idx" : 1 });
+};
+
+categoryScheme.statics.findParent = function (name) {
+  return this.findOne({ name: name }, {idx: 1});
 };
 
 module.exports = mongoose.model("Category", categoryScheme);
